@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+/* Tell Tailwind v4 to use the .dark class on <html> instead of OS media query */
+@variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  html {
+    @apply text-gray-900;
+    background: radial-gradient(circle at top, #f8fafc 0%, #e2e8f0 100%);
+    background-attachment: fixed;
+  }
+  html.dark {
+    @apply text-gray-100;
+    background: radial-gradient(circle at top center, #1e1b4b 0%, #09090b 100%);
+    background-attachment: fixed;
+  }
+  body {
+    @apply antialiased min-h-screen;
+    font-family: 'Outfit', system-ui, sans-serif;
+    overflow-y: overlay;
+  }
+
+  /* Custom Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-400;
+  }
+
+  /* Specific dark mode targeting for pseudo-elements */
+  .dark ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .dark ::-webkit-scrollbar-thumb {
+    @apply bg-gray-700/80;
+  }
+  .dark ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-600;
+  }
+}
