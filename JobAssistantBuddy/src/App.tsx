@@ -6,6 +6,7 @@ import AnalyticsBar from './components/ui/AnalyticsBar';
 import CommandPalette from './components/ui/CommandPalette';
 import { AlertsDropdown } from './components/ui/AlertsPanel';
 import MorningBriefing from './components/ui/MorningBriefing';
+import { LaunchpadDropdown } from './components/ui/Launchpad';
 import { useCommandPalette } from './context/CommandPaletteContext';
 import { useJobs } from './context/JobContext';
 import { useFollowUpAlerts } from './hooks/useFollowUpAlerts';
@@ -22,6 +23,7 @@ function AppInner() {
   );
   const [isJobModalOpen, setJobModalOpen] = useState(false);
   const [isAlertsOpen, setAlertsOpen] = useState(false);
+  const [isLaunchpadOpen, setLaunchpadOpen] = useState(false);
   const [dismissedAlerts, setDismissedAlerts] = useState<Set<string>>(new Set());
 
   // Morning briefing: show on first daily load
@@ -89,6 +91,8 @@ function AppInner() {
         isAlertsOpen={isAlertsOpen}
         onToggleAlerts={() => setAlertsOpen(p => !p)}
         onReplayBriefing={handleReplayBriefing}
+        isLaunchpadOpen={isLaunchpadOpen}
+        onToggleLaunchpad={() => setLaunchpadOpen(p => !p)}
       />
       <AnalyticsBar />
       <main className="flex-1 overflow-hidden h-full">
@@ -104,6 +108,10 @@ function AppInner() {
         dismissed={dismissedAlerts}
         onDismiss={handleDismissAlert}
         onDismissAll={handleDismissAll}
+      />
+      <LaunchpadDropdown
+        isOpen={isLaunchpadOpen}
+        onClose={() => setLaunchpadOpen(false)}
       />
 
       {showBriefing && (

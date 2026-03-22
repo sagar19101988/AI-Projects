@@ -5,10 +5,10 @@ import { useCommandPalette } from '../../context/CommandPaletteContext';
 import type { Job } from '../../types/job';
 import {
   Search, Plus, Moon, Sun, Download, Briefcase,
-  ArrowRight, Zap, ChevronRight, X
+  ArrowRight, Zap, ChevronRight, X, Linkedin, Compass
 } from 'lucide-react';
 
-type CommandGroup = 'Actions' | 'Jobs' | 'Move Job';
+type CommandGroup = 'Actions' | 'Jobs' | 'Move Job' | 'Job Search';
 
 interface Command {
   id: string;
@@ -110,6 +110,30 @@ export default function CommandPalette({ onAddJob, onToggleTheme, isDark, onExpo
       icon: <X size={16} />,
       group: 'Actions',
       action: () => { close(); setSearchQuery(''); },
+    },
+    {
+      id: 'search-linkedin',
+      label: 'Search LinkedIn Jobs',
+      description: 'Filtered to Easy Apply & Recent',
+      icon: <Linkedin size={16} />,
+      group: 'Job Search',
+      action: () => { window.open('https://www.linkedin.com/jobs/search/?f_AL=true&sortBy=DD', '_blank'); close(); },
+    },
+    {
+      id: 'search-naukri',
+      label: 'Search Naukri India',
+      description: 'Main India Jobs Portal',
+      icon: <Search size={16} />,
+      group: 'Job Search',
+      action: () => { window.open('https://www.naukri.com/jobs-in-india', '_blank'); close(); },
+    },
+    {
+      id: 'search-ats',
+      label: 'Search Direct ATS',
+      description: 'Hidden Greenhouse & Lever Jobs',
+      icon: <Compass size={16} />,
+      group: 'Job Search',
+      action: () => { window.open('https://google.com/search?q=site:greenhouse.io+OR+site:lever.co+%22software+engineer%22+%22remote%22', '_blank'); close(); },
     },
   ], [isDark, close, onAddJob, onToggleTheme, onExport, setSearchQuery]);
 

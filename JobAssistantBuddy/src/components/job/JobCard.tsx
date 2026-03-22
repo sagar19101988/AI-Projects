@@ -74,7 +74,10 @@ export default function JobCard({ job, onEdit }: { job: Job; onEdit: (job: Job) 
 
   // ── Status-contextual date chip ─────────────────────────────────────────
   const dateChip = useMemo(() => {
-    const appliedDate = new Date(job.appliedDate);
+    let appliedDate = new Date(job.appliedDate || Date.now());
+    if (isNaN(appliedDate.getTime())) {
+      appliedDate = new Date();
+    }
 
     switch (job.status) {
       case 'Wishlist':
@@ -92,7 +95,8 @@ export default function JobCard({ job, onEdit }: { job: Job; onEdit: (job: Job) 
         };
 
       case 'Follow-up': {
-        const ref = job.followUpDate ? new Date(job.followUpDate) : null;
+        const refRaw = job.followUpDate ? new Date(job.followUpDate) : null;
+        const ref = refRaw && !isNaN(refRaw.getTime()) ? refRaw : null;
         return {
           icon: <RefreshCw size={11} />,
           label: ref
@@ -112,6 +116,13 @@ export default function JobCard({ job, onEdit }: { job: Job; onEdit: (job: Job) 
           };
         }
         const ivDate = new Date(job.interviewDate);
+        if (isNaN(ivDate.getTime())) {
+          return {
+            icon: <Star size={11} />,
+            label: 'Invalid Date',
+            color: 'text-red-500 bg-red-50',
+          };
+        }
         const hoursLeft = differenceInHours(ivDate, new Date());
         const daysLeft = differenceInDays(ivDate, new Date());
 
@@ -155,6 +166,13 @@ export default function JobCard({ job, onEdit }: { job: Job; onEdit: (job: Job) 
           };
         }
         const deadline = new Date(job.offerDeadline);
+        if (isNaN(deadline.getTime())) {
+          return {
+            icon: <Trophy size={11} />,
+            label: 'Invalid Date',
+            color: 'text-red-500 bg-red-50',
+          };
+        }
         const daysLeft = differenceInDays(deadline, new Date());
         const overdue = isPast(deadline);
         return {
@@ -173,7 +191,8 @@ export default function JobCard({ job, onEdit }: { job: Job; onEdit: (job: Job) 
       }
 
       case 'Rejected': {
-        const ref = job.rejectedDate ? new Date(job.rejectedDate) : new Date(job.appliedDate);
+        const refRaw = job.rejectedDate ? new Date(job.rejectedDate) : appliedDate;
+        const ref = isNaN(refRaw.getTime()) ? appliedDate : refRaw;
         const stageText = job.rejectionStage ? ` • ${job.rejectionStage}` : '';
         return {
           icon: <XCircle size={11} />,

@@ -4,6 +4,7 @@ import { useJobs } from '../../context/JobContext';
 import { useCommandPalette } from '../../context/CommandPaletteContext';
 import { Moon, Sun, Briefcase, Plus, Search, Command, Newspaper } from 'lucide-react';
 import { AlertsBell } from '../ui/AlertsPanel';
+import { LaunchpadButton } from '../ui/Launchpad';
 
 interface HeaderProps {
   darkMode: boolean;
@@ -12,9 +13,11 @@ interface HeaderProps {
   isAlertsOpen: boolean;
   onToggleAlerts: () => void;
   onReplayBriefing: () => void;
+  isLaunchpadOpen: boolean;
+  onToggleLaunchpad: () => void;
 }
 
-export default function Header({ darkMode, setDarkMode, onAddJob, isAlertsOpen, onToggleAlerts, onReplayBriefing }: HeaderProps) {
+export default function Header({ darkMode, setDarkMode, onAddJob, isAlertsOpen, onToggleAlerts, onReplayBriefing, isLaunchpadOpen, onToggleLaunchpad }: HeaderProps) {
   const { searchQuery, setSearchQuery } = useJobs();
   const { open: openPalette } = useCommandPalette();
 
@@ -68,6 +71,9 @@ export default function Header({ darkMode, setDarkMode, onAddJob, isAlertsOpen, 
 
           {/* Alerts bell — dropdown rendered at root in App.tsx */}
           <AlertsBell isOpen={isAlertsOpen} onToggle={onToggleAlerts} />
+
+          {/* Launchpad Quick Searches */}
+          <LaunchpadButton isOpen={isLaunchpadOpen} onToggle={onToggleLaunchpad} />
 
           {/* Morning briefing replay */}
           <button
