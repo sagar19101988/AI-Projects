@@ -18,11 +18,10 @@ function StatCard({
 }) {
   return (
     <div 
-      title={tooltip} 
       className="group relative flex-1 flex items-center gap-3 px-4 py-3 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm min-w-[150px] cursor-default hover:border-indigo-300 dark:hover:border-indigo-600/50 hover:shadow-md transition-all"
     >
       {tooltip && (
-        <Info size={12} className="absolute top-2 right-2 text-gray-300 dark:text-gray-600 group-hover:text-indigo-400 transition-colors pointer-events-none" />
+        <Info size={12} className="absolute top-2 right-2 text-gray-300 dark:text-gray-600 group-hover:text-transparent transition-colors pointer-events-none z-0" />
       )}
       <div className={`shrink-0 p-2 rounded-lg ${color}`}>
         {icon}
@@ -32,6 +31,15 @@ function StatCard({
         <p className="text-lg font-bold text-gray-900 dark:text-white leading-none">{value}</p>
         {sub && <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-0.5">{sub}</p>}
       </div>
+
+      {/* Embedded Custom Tooltip Overlay */}
+      {tooltip && (
+        <div className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-all duration-200 z-10 flex items-center justify-center px-4 rounded-xl bg-gray-900/95 dark:bg-black/90 backdrop-blur-sm shadow-xl scale-95 group-hover:scale-100">
+          <p className="text-white text-[11px] font-medium leading-relaxed text-center drop-shadow-md">
+            {tooltip}
+          </p>
+        </div>
+      )}
     </div>
   );
 }
@@ -76,10 +84,16 @@ export default function AnalyticsBar() {
 
           {/* Health Score — Featured Card */}
           <div 
-            title="A holistic score out of 100 representing the momentum and health of your entire pipeline"
             className={`group relative flex-1 flex flex-col justify-between p-4 rounded-xl border shadow-sm min-w-[176px] xl:max-w-[300px] cursor-default hover:shadow-md transition-all ${scoreBg}`}
           >
-            <Info size={13} className={`absolute top-3 right-3 opacity-40 group-hover:opacity-100 transition-opacity pointer-events-none ${analytics.healthColor}`} />
+            <Info size={13} className={`absolute top-3 right-3 opacity-40 group-hover:opacity-0 transition-opacity pointer-events-none z-0 ${analytics.healthColor}`} />
+
+            {/* Custom Tooltip Overlay */}
+            <div className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-all duration-200 z-10 flex items-center justify-center px-5 rounded-xl bg-gray-900/95 dark:bg-black/90 backdrop-blur-sm shadow-xl scale-95 group-hover:scale-100">
+              <p className="text-white text-[12px] font-medium leading-relaxed text-center drop-shadow-md">
+                A holistic score out of 100 representing the momentum and health of your entire pipeline
+              </p>
+            </div>
 
             <div className="flex items-center justify-between mb-2">
               <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Health Score</p>
