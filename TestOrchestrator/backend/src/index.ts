@@ -16,7 +16,10 @@ initDb();
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-app.use(cors({ origin: 'http://localhost:5174', credentials: true }));
+const allowedOrigins = process.env.NODE_ENV === 'production'
+  ? true // Allow all origins in production (Vercel handles this)
+  : 'http://localhost:5174';
+app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.json());
 
 app.get('/health', (_req, res) => {
