@@ -24,7 +24,7 @@ export default function AuthScreen() {
     setIsSubmitting(true);
     
     try {
-      const endpoint = isRegistering ? 'http://localhost:3001/api/auth/register' : 'http://localhost:3001/api/auth/login';
+      const endpoint = isRegistering ? '/api/auth/register' : '/api/auth/login';
       const body = isRegistering ? { name, email, password } : { email, password };
       
       const response = await fetch(endpoint, {

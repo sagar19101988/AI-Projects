@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import db from '../services/db';
+import sql from '../services/db';
 import crypto from 'crypto';
 
 const router = Router();
@@ -17,8 +17,8 @@ router.post('/register', async (req, res) => {
     }
 
     // Check if user exists
-    const existing = db.prepare('SELECT id FROM users WHERE email = ?').get(email);
-    if (existing) {
+    const existingResult = await sql`SELECT id FROM users WHERE email = ${email}`;
+    if (existingResult.rows.length > 0) {
       return res.status(409).json({ error: 'User already exists with this email.' });
     }
 
@@ -26,11 +26,10 @@ router.post('/register', async (req, res) => {
     const hash = await bcrypt.hash(password, 12);
     const userId = crypto.randomUUID();
     
-    db.prepare('INSERT INTO users (id, name, email, password_hash) VALUES (?, ?, ?, ?)')
-      .run(userId, name, email, hash);
+    await sql`INSERT INTO users (id, name, email, password_hash) VALUES (${userId}, ${name}, ${email}, ${hash})`;
 
     // Create empty integration record
-    db.prepare('INSERT INTO user_integrations (user_id) VALUES (?)').run(userId);
+    await sql`INSERT INTO user_integrations (user_id) VALUES (${userId})`;
 
     // Generate JWT
     const token = jwt.sign({ userId, email, name }, JWT_SECRET, { expiresIn: '7d' });
@@ -48,10 +47,12 @@ router.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
     // Fetch user
-    const user: any = db.prepare('SELECT * FROM users WHERE email = ?').get(email);
-    if (!user) {
+    const result = await sql`SELECT * FROM users WHERE email = ${email}`;
+    if (result.rows.length === 0) {
       return res.status(401).json({ error: 'Invalid email or password.' });
     }
+    
+    const user = result.rows[0];
 
     // Verify password
     const isValid = await bcrypt.compare(password, user.password_hash);

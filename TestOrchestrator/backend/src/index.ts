@@ -29,8 +29,10 @@ app.use('/api/config', configRoutes);
 app.use('/api/jira', jiraRoutes);
 app.use('/api/ai', aiRoutes);
 
-app.listen(PORT, () => {
-  console.log(`✅ Test Orchestrator Backend secure layer running on http://localhost:${PORT}`);
-});
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`✅ Test Orchestrator Backend running on http://localhost:${PORT}`);
+  });
+}
 
 export default app;
